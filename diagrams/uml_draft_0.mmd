@@ -1,0 +1,85 @@
+```mermaid
+classDiagram
+    class Owner {
+        -name: string
+        -email: string
+        -pets: Pet[]
+        +addPet(pet: Pet) void
+        +removePet(petId: string) void
+        +getPets() Pet[]
+        +getAllTasks() Task[]
+    }
+
+    class Pet {
+        -petId: string
+        -name: string
+        -type: string
+        -breed: string
+        -age: number
+        -tasks: Task[]
+        +addTask(task: Task) void
+        +editTask(taskId: string, updates: object) void
+        +removeTask(taskId: string) void
+        +getTasks() Task[]
+        +getTasksByFrequency(freq: string) Task[]
+    }
+
+    class Task {
+        -taskId: string
+        -description: string
+        -scheduledTime: DateTime
+        -frequency: string
+        -duration: number
+        -priority: number
+        -isCompleted: boolean
+        +updateStatus(completed: boolean) void
+        +updateDetails(updates: object) void
+        +isOverdue() boolean
+        +getNextOccurrence() DateTime
+    }
+
+    class Scheduler {
+        -owner: Owner
+        -tasks: Task[]
+        +generateDailySchedule(date: Date) Schedule
+        +optimizeSchedule(constraints: object) Schedule
+        +getTasksByPriority() Task[]
+        +getTasksByPet(pet: Pet) Task[]
+        +getConflicts() Conflict[]
+        +explainScheduleDecision(task: Task) string
+    }
+
+    class Schedule {
+        -date: Date
+        -scheduledTasks: ScheduledTask[]
+        -conflicts: Conflict[]
+        +getTasksForTimeSlot(start: Time, end: Time) ScheduledTask[]
+        +displayPlan() void
+        +exportPlan(format: string) void
+    }
+
+    class ScheduledTask {
+        -task: Task
+        -pet: Pet
+        -startTime: DateTime
+        -endTime: DateTime
+        -explanation: string
+    }
+
+    class Conflict {
+        -task1: Task
+        -task2: Task
+        -pet1: Pet
+        -pet2: Pet
+        -reason: string
+    }
+
+    Owner "1" -- "*" Pet : manages
+    Pet "1" -- "*" Task : contains
+    Scheduler "1" -- "1" Owner : orchestrates
+    Scheduler "1" -- "*" Schedule : generates
+    Schedule "1" -- "*" ScheduledTask : contains
+    ScheduledTask -- Task : references
+    ScheduledTask -- Pet : references
+    Schedule "1" -- "*" Conflict : may have
+```

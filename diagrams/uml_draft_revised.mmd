@@ -1,0 +1,43 @@
+classDiagram
+    class Owner {
+        -name : str
+        -pets : list~Pet~
+        -scheduler : Scheduler
+        -schedule : list~tuple~
+        -reasoning : list~str~
+        +add(pet : Pet) Pet
+        +remove(pet : Pet) None
+        +find_pet(name : str) Pet
+        +get_tasks() list~Task~
+        +generate_schedule() None
+        +display_schedule() None
+        +display_reasoning() None
+    }
+
+    class Pet {
+        -name : str
+        -species : str
+        -tasks : list~Task~
+        +add_task(title, duration, priority, frequency) Task
+        +remove_task(task : Task) None
+        +find_task(title : str) Task
+    }
+
+    class Task {
+        -title : str
+        -duration : int
+        -priority : int
+        -frequency : str
+        +edit(title?=None, duration?=None, priority?=None, frequency?=None) Task
+    }
+
+    class Scheduler {
+        +generate_schedule(owner : Owner) tuple
+    }
+
+    note for Owner "schedule type: list[(str, time, Task)]"
+
+    Owner "1" *-- "*" Pet : manages
+    Pet "1" *-- "*" Task : contains
+    Owner "1" --> "1" Scheduler : uses
+    Scheduler ..> Owner : parameter
