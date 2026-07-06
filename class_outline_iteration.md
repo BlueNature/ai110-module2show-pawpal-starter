@@ -77,7 +77,9 @@ methods: get_tasks(owner: Owner) -> list[Task], generate_schedule(owner: Owner) 
 
 **Prompt:** *Consider the following class outline generated earlier. Verify that it meets all of the goals and intended functionality, and that there are no issues that we have not already discussed or fixed. (Version 2) (Goals)*
 
+
 **Prompt:** *Here are my notes, suggestions, and questions. Implement the suggested changes and explain why they are good/bad: (Suggestions)*
+
 
 **Version 3:**
 Owner:
@@ -95,3 +97,25 @@ methods: edit(title=None, duration=None, priority=None, frequency=None) -> Task
 Scheduler:
 attributes: (none — stateless)
 methods: generate_schedule(owner: Owner) -> tuple[list[(str, time, Task)], list[str]]
+
+
+**Version 4:**
+Owner:
+attributes: name, pets: list[Pet], scheduler: Scheduler, schedule: list[(str, time, Task)], reasoning: list[str]
+methods: add(Pet) -> Pet, remove(Pet) -> None, find_pet(name: str) -> Pet, get_tasks() -> list[Task], generate_schedule(), display_schedule(), display_reasoning()
+
+Pet:
+attributes: name, species, tasks: list[Task]
+methods: add_task(title, duration, priority, frequency) -> Task, remove_task(Task) -> None, find_task(title: str) -> Task
+
+Task:
+attributes: title, duration, priority, frequency
+methods: edit(title=None, duration=None, priority=None, frequency=None) -> Task
+
+Scheduler:
+attributes: (none — stateless)
+methods: generate_schedule(owner: Owner) -> tuple[list[(str, time, Task)], list[str]]
+
+Priority:
+(enumeration)
+values: VERY_HIGH, HIGH, MEDIUM, LOW, VERY_LOW

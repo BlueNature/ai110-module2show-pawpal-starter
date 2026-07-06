@@ -1,4 +1,13 @@
 classDiagram
+    class Priority {
+        <<enumeration>>
+        VERY_HIGH
+        HIGH
+        MEDIUM
+        LOW
+        VERY_LOW
+    }
+    
     class Owner {
         -name : str
         -pets : list~Pet~
@@ -26,7 +35,7 @@ classDiagram
     class Task {
         -title : str
         -duration : int
-        -priority : int
+        -priority : Priority
         -frequency : str
         +edit(title?=None, duration?=None, priority?=None, frequency?=None) Task
     }

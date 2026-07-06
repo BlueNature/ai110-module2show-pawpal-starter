@@ -1,21 +1,30 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import time
+from enum import Enum
 from typing import Optional
+
+
+class Priority(Enum):
+    VERY_HIGH = 5
+    HIGH      = 4
+    MEDIUM    = 3
+    LOW       = 2
+    VERY_LOW  = 1
 
 
 @dataclass
 class Task:
     title: str
     duration: int       # minutes
-    priority: int
+    priority: Priority
     frequency: str
 
     def edit(
         self,
         title: Optional[str] = None,
         duration: Optional[int] = None,
-        priority: Optional[int] = None,
+        priority: Optional[Priority] = None,
         frequency: Optional[str] = None,
     ) -> Task:
         if title is not None:
@@ -35,7 +44,7 @@ class Pet:
     species: str
     tasks: list[Task] = field(default_factory=list)
 
-    def add_task(self, title: str, duration: int, priority: int, frequency: str) -> Task:
+    def add_task(self, title: str, duration: int, priority: Priority, frequency: str) -> Task:
         task = Task(title=title, duration=duration, priority=priority, frequency=frequency)
         self.tasks.append(task)
         return task
@@ -62,7 +71,7 @@ class Owner:
     name: str
     scheduler: Scheduler = field(default_factory=Scheduler)
     pets: list[Pet] = field(default_factory=list)
-    schedule: list[tuple] = field(default_factory=list)  # list[(str, time, Task)]
+    schedule: list[tuple[str, time, Task]] = field(default_factory=list)  # list[(str, time, Task)]
     reasoning: list[str] = field(default_factory=list)
 
     def add(self, pet: Pet) -> Pet:
