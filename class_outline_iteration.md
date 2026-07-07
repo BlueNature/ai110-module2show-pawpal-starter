@@ -119,3 +119,8 @@ methods: generate_schedule(owner: Owner) -> tuple[list[(str, time, Task)], list[
 Priority:
 (enumeration)
 values: VERY_HIGH, HIGH, MEDIUM, LOW, VERY_LOW
+
+
+**Later additions:**
+- overloaded Owner's `get_tasks()` to include `get_tasks(Pet)`
+- added `completed` attribute and `mark_complete()` method to Task
