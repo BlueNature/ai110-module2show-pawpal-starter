@@ -71,17 +71,42 @@ Skipped 'Nap (do not disturb or else)' for Lord Biscuit Mc-Stinkypaws III — ti
 
 ```bash
 # Run the full test suite:
-pytest
+python3 -m pytest
 
 # Run with coverage:
-pytest --cov
+python3 -m pytest --cov
 ```
 
 Sample test output:
 
 ```
-# Paste your pytest output here
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.3, pluggy-1.6.0 -- /home/aabedin/CodePath/codepath_venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/aabedin/CodePath/ai110-module2show-pawpal-starter
+plugins: anyio-4.13.0
+collecting ... collected 43 items
+
+tests/test_pawpal.py::test_mark_complete_changes_status PASSED           [  2%]
+tests/test_pawpal.py::test_add_task_increases_pet_task_count PASSED      [  4%]
+tests/test_pawpal.py::test_sort_by_time_ascending PASSED                 [  6%]
+tests/test_pawpal.py::test_sort_by_time_none_times_sort_last PASSED      [  9%]
+tests/test_pawpal.py::test_sort_by_date_ascending PASSED                 [ 11%]
+tests/test_pawpal.py::test_sort_by_date_none_dates_sort_last PASSED      [ 13%]
+tests/test_pawpal.py::test_sort_by_priority_descending PASSED            [ 16%]
+tests/test_pawpal.py::test_sort_by_time_with_priority_tie_break PASSED   [ 18%]
+...
+tests/test_pawpal.py::test_pet_remove_task_removes_from_list PASSED      [ 93%]
+tests/test_pawpal.py::test_full_flow_owner_pet_task_to_schedule PASSED   [ 95%]
+tests/test_pawpal.py::test_full_flow_multiple_pets_conflict_resolution PASSED [ 97%]
+tests/test_pawpal.py::test_full_flow_complete_and_reschedule PASSED      [100%]
+
+============================== 43 passed in 0.11s ==============================
 ```
+(full test output available in tests/test\_output\_full.md)
+
+__Confidence level: 5/5 stars__
+All of the test cases (total 43) pass. One case was previously included that verified a potential type error, but I confirmed that this case doesn't happen in practice when adding tasks through the UI. (The only way it can occur is when explicitly creating a task with arbitrary values, which cannot happen.) But while the tests seem to comprehensively cover all the backend functions and logic, I would still take some time to look deeper into the code myself if I had more time.
 
 ## 📐 Smarter Scheduling
 

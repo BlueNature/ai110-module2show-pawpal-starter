@@ -1,0 +1,52 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.3, pluggy-1.6.0 -- /home/aabedin/CodePath/codepath_venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/aabedin/CodePath/ai110-module2show-pawpal-starter
+plugins: anyio-4.13.0
+collecting ... collected 43 items
+
+tests/test_pawpal.py::test_mark_complete_changes_status PASSED           [  2%]
+tests/test_pawpal.py::test_add_task_increases_pet_task_count PASSED      [  4%]
+tests/test_pawpal.py::test_sort_by_time_ascending PASSED                 [  6%]
+tests/test_pawpal.py::test_sort_by_time_none_times_sort_last PASSED      [  9%]
+tests/test_pawpal.py::test_sort_by_date_ascending PASSED                 [ 11%]
+tests/test_pawpal.py::test_sort_by_date_none_dates_sort_last PASSED      [ 13%]
+tests/test_pawpal.py::test_sort_by_priority_descending PASSED            [ 16%]
+tests/test_pawpal.py::test_sort_by_time_with_priority_tie_break PASSED   [ 18%]
+tests/test_pawpal.py::test_sort_by_priority_with_time_tie_break PASSED   [ 20%]
+tests/test_pawpal.py::test_sort_does_not_mutate_original_list PASSED     [ 23%]
+tests/test_pawpal.py::test_daily_task_mark_complete_creates_next_day_task PASSED [ 25%]
+tests/test_pawpal.py::test_weekly_task_mark_complete_creates_next_week_task PASSED [ 27%]
+tests/test_pawpal.py::test_one_time_task_mark_complete_no_new_task PASSED [ 30%]
+tests/test_pawpal.py::test_mark_complete_without_pet_no_error PASSED     [ 32%]
+tests/test_pawpal.py::test_recurring_task_inherits_attributes PASSED     [ 34%]
+tests/test_pawpal.py::test_filter_by_completed_true PASSED               [ 37%]
+tests/test_pawpal.py::test_filter_by_completed_false PASSED              [ 39%]
+tests/test_pawpal.py::test_filter_by_date_matching PASSED                [ 41%]
+tests/test_pawpal.py::test_filter_by_date_no_match_returns_empty PASSED  [ 44%]
+tests/test_pawpal.py::test_filter_by_pet_name_matching PASSED            [ 46%]
+tests/test_pawpal.py::test_filter_by_pet_name_no_match_returns_empty PASSED [ 48%]
+tests/test_pawpal.py::test_exact_same_start_time_conflict PASSED         [ 51%]
+tests/test_pawpal.py::test_adjacent_tasks_no_conflict PASSED             [ 53%]
+tests/test_pawpal.py::test_partial_overlap_conflict PASSED               [ 55%]
+tests/test_pawpal.py::test_none_time_task_always_added PASSED            [ 58%]
+tests/test_pawpal.py::test_higher_priority_wins_conflict PASSED          [ 60%]
+tests/test_pawpal.py::test_non_overlapping_tasks_both_scheduled PASSED   [ 62%]
+tests/test_pawpal.py::test_generate_schedule_excludes_completed_tasks PASSED [ 65%]
+tests/test_pawpal.py::test_generate_schedule_only_includes_target_date PASSED [ 67%]
+tests/test_pawpal.py::test_generate_schedule_sorted_priority_then_time PASSED [ 69%]
+tests/test_pawpal.py::test_generate_schedule_returns_reasoning_entries PASSED [ 72%]
+tests/test_pawpal.py::test_generate_schedule_default_date_is_tomorrow PASSED [ 74%]
+tests/test_pawpal.py::test_owner_add_pet PASSED                          [ 76%]
+tests/test_pawpal.py::test_owner_remove_pet PASSED                       [ 79%]
+tests/test_pawpal.py::test_owner_find_pet_found PASSED                   [ 81%]
+tests/test_pawpal.py::test_owner_find_pet_not_found PASSED               [ 83%]
+tests/test_pawpal.py::test_owner_find_task_across_pets PASSED            [ 86%]
+tests/test_pawpal.py::test_owner_find_task_not_found_returns_none PASSED [ 88%]
+tests/test_pawpal.py::test_owner_get_all_tasks_flattens_pets PASSED      [ 90%]
+tests/test_pawpal.py::test_pet_remove_task_removes_from_list PASSED      [ 93%]
+tests/test_pawpal.py::test_full_flow_owner_pet_task_to_schedule PASSED   [ 95%]
+tests/test_pawpal.py::test_full_flow_multiple_pets_conflict_resolution PASSED [ 97%]
+tests/test_pawpal.py::test_full_flow_complete_and_reschedule PASSED      [100%]
+
+============================== 43 passed in 0.11s ==============================
