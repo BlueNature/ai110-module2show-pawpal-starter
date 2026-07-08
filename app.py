@@ -54,6 +54,12 @@ if "selected_owner" not in st.session_state:
 if "selected_pet" not in st.session_state:
     st.session_state.selected_pet = None
 
+if "schedule" not in st.session_state:
+    st.session_state.schedule = []
+
+if "reasoning" not in st.session_state:
+    st.session_state.reasoning = []
+
 
 def _add_owner(name):
     if name not in st.session_state.owners:
@@ -152,6 +158,9 @@ FREQUENCY_MAP = {
     "One-time": Frequency.ONE_TIME,
 }
 
+PRIORITY_LABEL   = {v: k for k, v in PRIORITY_MAP.items()}
+FREQUENCY_LABEL  = {v: k for k, v in FREQUENCY_MAP.items()}
+
 col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     task_title = st.text_input("Task title", value="Morning walk")
@@ -197,29 +206,58 @@ if current_pet and current_pet.tasks:
             "Date": str(t.date) if t.date else "—",
             "Start time": str(t.time) if t.time else "—",
             "Duration (min)": t.duration,
-            "Priority": t.priority.name,
-            "Frequency": t.frequency.value,
+            "Priority": PRIORITY_LABEL[t.priority],
+            "Frequency": FREQUENCY_LABEL[t.frequency],
         }
         for t in current_pet.tasks
     ])
+
+    task_titles = [t.title for t in current_pet.tasks]
+    remove_title = st.selectbox("Select task to remove", task_titles, key="remove_task_select")
+
+    def _remove_task():
+        task = current_pet.find_task(remove_title)
+        if task:
+            current_pet.remove_task(task)
+
+    st.button("Remove task", on_click=_remove_task)
 else:
     st.info("No tasks yet. Add one above.")
 
 st.divider()
 
 st.subheader("Build Schedule")
-st.caption("This button should call your scheduling logic once you implement it.")
+st.caption("Generate a schedule for your pets for tomorrow.")
 
-if st.button("Generate schedule"):
-    st.warning(
-        "Not implemented yet. Next step: create your scheduling logic (classes/functions) and call it here."
-    )
-    st.markdown(
-        """
-Suggested approach:
-1. Design your UML (draft).
-2. Create class stubs (no logic).
-3. Implement scheduling behavior.
-4. Connect your scheduler here and display results.
-"""
-    )
+def _generate_schedule():
+    if current_owner:
+        current_owner.generate_schedule()
+        st.session_state.schedule = current_owner.schedule
+        st.session_state.reasoning = current_owner.reasoning
+    else:
+        st.warning("Add an owner first.")
+
+st.button("Generate schedule", on_click=_generate_schedule)
+
+if st.session_state.schedule:
+    st.write(f"Schedule for {current_owner.name if current_owner else ''}:")
+    st.table([
+        {
+            "Title": t.title,
+            "Pet": t.pet.name if t.pet else "—",
+            "Date": str(t.date) if t.date else "—",
+            "Time": str(t.time) if t.time else "—",
+            "Duration (min)": t.duration,
+        }
+        for t in st.session_state.schedule
+    ])
+elif st.session_state.reasoning:
+    st.info("No tasks were scheduled (all conflicts or no tasks for that date).")
+
+if st.session_state.reasoning:
+    st.markdown("**Reasoning:**")
+    for reason in st.session_state.reasoning:
+        if reason.startswith("Added"):
+            st.success(reason)
+        else:
+            st.error(reason)

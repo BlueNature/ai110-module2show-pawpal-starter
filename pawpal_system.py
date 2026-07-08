@@ -195,6 +195,7 @@ class Scheduler:
                 schedule.append(task)
                 reasoning.append(f"Added '{task.title}' for {pet_name} at {task.time}.")
 
+        schedule = Scheduler.sort_by_time_with_priority(schedule)
         return (schedule, reasoning)
 
 

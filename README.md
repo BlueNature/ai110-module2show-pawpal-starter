@@ -46,7 +46,7 @@ pip install -r requirements.txt
 
 Paste a sample of your app's CLI or Streamlit output here so a reader can see what a generated plan looks like:
 
-**Example CLI output:** (Streamlit output is formatted cleanly as a table)
+**Example CLI output:** (Streamlit output is formatted cleanly as a table; see images)
 ```
 Tomorrow's Generated Schedule
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -105,8 +105,6 @@ tests/test_pawpal.py::test_full_flow_complete_and_reschedule PASSED      [100%]
 ```
 (full test output available in tests/test\_output\_full.md)
 
-__Confidence level: 5/5 stars__
-All of the test cases (total 43) pass. One case was previously included that verified a potential type error, but I confirmed that this case doesn't happen in practice when adding tasks through the UI. (The only way it can occur is when explicitly creating a task with arbitrary values, which cannot happen.) But while the tests seem to comprehensively cover all the backend functions and logic, I would still take some time to look deeper into the code myself if I had more time.
 
 ## 📐 Smarter Scheduling
 
@@ -124,10 +122,12 @@ All of the test cases (total 43) pass. One case was previously included that ver
 
 Describe your app in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. Add an owner by typing in their name. Select the current owner using the box above.
+2. Add an owner's pet by typing in their name and species. Select the current pet using the box above.
+3. Add a pet's task by filling in the task name, start time, duration, priority, and frequency.
+    a. A frequency of "Weekly" or "One-time" will also prompt a day of week or specific date respectively.
+4. Click "Generate Schedule" to see all tasks for the next day arranged in a table, followed by reasoning and feedback about what tasks could/could not be scheduled and why.
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
+**Screenshot or video** *(optional)*:
+![Example generated schedule image](schedule-image.png)
+![Example generated reasoning image](reasoning-image.png)

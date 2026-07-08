@@ -1,0 +1,75 @@
+classDiagram
+    class Priority {
+        <<enumeration>>
+        VERY_HIGH
+        HIGH
+        MEDIUM
+        LOW
+        VERY_LOW
+    }
+
+    class Frequency {
+        <<enumeration>>
+        DAILY
+        WEEKLY
+        ONE_TIME
+    }
+
+    class Owner {
+        -name : str
+        -scheduler : Scheduler
+        -pets : list~Pet~
+        -schedule : list~Task~
+        -reasoning : list~str~
+        +add_pet(pet : Pet) Pet
+        +remove_pet(pet : Pet) None
+        +find_pet(name : str) Pet
+        +find_task(title : str) Task
+        +get_all_tasks() list~Task~
+        +get_tasks(pet : Pet) list~Task~
+        +generate_schedule() None
+        +display_schedule() None
+        +display_reasoning() None
+    }
+
+    class Pet {
+        -name : str
+        -species : str
+        -tasks : list~Task~
+        +add_task(title : str, date?, time?, duration : int, priority : Priority, frequency : Frequency) Task
+        +remove_task(task : Task) None
+        +find_task(title : str) Task
+    }
+
+    class Task {
+        -title : str
+        -date : Date
+        -time : Time
+        -duration : int
+        -priority : Priority
+        -frequency : Frequency
+        -pet : Pet
+        -completed : bool
+        +mark_complete() None
+        +edit(title?, date?, time?, duration?, priority?, frequency?) Task
+    }
+
+    class Scheduler {
+        +sort_by_date(tasks : list~Task~)$ list~Task~
+        +sort_by_time(tasks : list~Task~)$ list~Task~
+        +sort_by_priority(tasks : list~Task~)$ list~Task~
+        +sort_by_time_with_priority(tasks : list~Task~)$ list~Task~
+        +sort_by_priority_with_time(tasks : list~Task~)$ list~Task~
+        +filter_by_completed(tasks : list~Task~, completed : bool)$ list~Task~
+        +filter_by_date(tasks : list~Task~, target_date : Date)$ list~Task~
+        +filter_by_pet(tasks : list~Task~, pet_name : str)$ list~Task~
+        +generate_schedule(owner : Owner, date?) tuple~list~Task~, list~str~~
+    }
+
+    Owner "1" *-- "*" Pet : manages
+    Pet "1" *-- "*" Task : contains
+    Task --> Priority : uses
+    Task --> Frequency : uses
+    Task --> Pet : belongs_to
+    Owner "1" --> "1" Scheduler : uses
+    Scheduler ..> Owner : depends_on
