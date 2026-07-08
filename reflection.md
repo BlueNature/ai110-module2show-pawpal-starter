@@ -36,18 +36,7 @@ Scheduler:
 - attributes: (not sure yet)
 - methods: get_tasks -> list[Task], generate_schedule
 
-
-
-**b. Design changes**
-
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
-
-The design changed quite a bit from the original plans. For example, I had to figure out how the Owner class would access the reasoning from the Scheduler; Claude Code suggested representing it as a list of strings where each one represents a decision made rather than a whole string. Another decision was whether the Owner or the Scheduler would be in control of getting all the tasks from all the pets. This settled on the Owner, for which the Scheduler could call its method when generating the schedule. I also decided to create an Enum for the task priority.
-Finally, a significant change was how to represent the tasks in the final schedule. I was stuck between having it be a simple list of tasks or a list of tuples containing the time and the task. (in other words, whether the day and time should be attributes of the task or appear separately) When working with Claude Code, it suggested that the time attributes should be separate from the Task definition because these attributes only get filled once the Scheduler generates a schedule, otherwise the Task may have these attributes blank sometimes and filled other times.
-Finally, there were a few small changes made in some of the accessor functions so that they could be used by app.py in the Streamlit UI instead of plain print statements. (The skeleton code originally contained only print statements but was added to later on)
-
-**Final Draft Classes:**
+**Revised Draft Classes:**
 Owner:
 attributes: name, pets: list[Pet], scheduler: Scheduler, schedule: list[(str, time, Task)], reasoning: list[str]
 methods: add(Pet) -> Pet, remove(Pet) -> None, find_pet(name: str) -> Pet, get_tasks() -> list[Task], generate_schedule(), display_schedule(), display_reasoning()
@@ -67,6 +56,21 @@ methods: generate_schedule(owner: Owner) -> tuple[list[(str, time, Task)], list[
 Priority:
 (enumeration)
 values: VERY_HIGH, HIGH, MEDIUM, LOW, VERY_LOW
+
+
+
+**b. Design changes**
+
+- Did your design change during implementation?
+- If yes, describe at least one change and why you made it.
+
+The design changed quite a bit from the original plans. For example, I had to figure out how the Owner class would access the reasoning from the Scheduler; Claude Code suggested representing it as a list of strings where each one represents a decision made rather than a whole string. Another decision was whether the Owner or the Scheduler would be in control of getting all the tasks from all the pets. This settled on the Owner, for which the Scheduler could call its method when generating the schedule. I also decided to create an Enum for the task priority.
+A significant change was how to represent the tasks in the final schedule. I was stuck between having it be a simple list of tasks or a list of tuples containing the time and the task. (in other words, whether the day and time should be attributes of the task or appear separately) When working with Claude Code, it suggested that the time attributes should be separate from the Task definition because these attributes only get filled once the Scheduler generates a schedule, otherwise the Task may have these attributes blank sometimes and filled other times.
+However, later in the project I realized that this might go against what the instructions want; rather than the Scheduler figuring out what times work best for the tasks, the user can be expected to put in the starting time and duration (as rigid values) and the Scheduler will arrange them all. This means the Task would have the time attribute and the schedule could be represented as just a list of tasks sorted by time.
+Finally, there were a few small changes made in some of the accessor functions so that they could be used by app.py in the Streamlit UI instead of plain print statements. (The skeleton code originally contained only print statements but was added to later on)
+
+**Final Draft Classes:**
+
 
 
 
@@ -97,6 +101,8 @@ values: VERY_HIGH, HIGH, MEDIUM, LOW, VERY_LOW
 
 - Describe one moment where you did not accept an AI suggestion as-is.
 - How did you evaluate or verify what the AI suggested?
+
+When generating the test file, the AI added import statements for sys and os. I did not approve these changes without asking further because I am wary about including import statements for packages I do not know the purpose of. After asking, it decided that these imports were unnecessary and did not include them.
 
 ---
 

@@ -1,32 +1,39 @@
-from pawpal_system import Priority, Task, Pet, Scheduler, Owner
+from pawpal_system import Priority, Frequency, Task, Pet, Scheduler, Owner
 
 def main():
     s = Scheduler()
     claude = Owner("Claude", s, [], [], [])
 
     dot = Pet("Dot", "cute doggy", [])
-    claude.add(dot)
+    claude.add_pet(dot)
     spot = Pet("Spot", "silly bunny", [])
-    claude.add(spot)
+    claude.add_pet(spot)
     pip = Pet("Pip", "grumpy cat", [])
-    claude.add(pip)
+    claude.add_pet(pip)
     gremlin = Pet("Lord Biscuit Mc-Stinkypaws III", "chaotic feral ferret of unknown origin", [])
-    claude.add(gremlin)
+    claude.add_pet(gremlin)
 
-    dot.add_task("walkies!", 60, Priority.HIGH, "daily")
-    dot.add_task("fetch", 20, Priority.LOW, "daily")
-    spot.add_task("Bath Time", 45, Priority.MEDIUM, "weekly")
-    spot.add_task("Vet visit", 200, Priority.VERY_HIGH, "one-time")
-    spot.add_task("Hay Refill", 10, Priority.HIGH, "daily")
-    pip.add_task("brushing", 15, Priority.MEDIUM, "weekly")
-    pip.add_task("Vet visit", 200, Priority.VERY_HIGH, "one-time")
-    gremlin.add_task("ESCAPE ATTEMPT #47", 1, Priority.VERY_HIGH, "hourly")
-    gremlin.add_task("steal dad's socks", 9999, Priority.LOW, "constantly")
-    gremlin.add_task("Nap (do not disturb or else)", 0, Priority.VERY_LOW, "never")
-    gremlin.add_task("??????????", 30, Priority.MEDIUM, "??????")
+    dot.add_task(title="walkies!", duration=60, priority=Priority.HIGH, frequency=Frequency.DAILY)
+    dot.add_task(title="fetch", duration=20, priority=Priority.LOW, frequency=Frequency.DAILY)
+    spot.add_task(title="Bath Time", duration=45, priority=Priority.MEDIUM, frequency=Frequency.WEEKLY)
+    spot.add_task(title="Vet visit", duration=200, priority=Priority.VERY_HIGH, frequency=Frequency.ONE_TIME)
+    spot.add_task(title="Hay Refill", duration=10, priority=Priority.HIGH, frequency=Frequency.DAILY)
+    pip.add_task(title="brushing", duration=15, priority=Priority.MEDIUM, frequency=Frequency.WEEKLY)
+    pip.add_task(title="Vet visit", duration=200, priority=Priority.VERY_HIGH, frequency=Frequency.ONE_TIME)
+    # gremlin.add_task(title="ESCAPE ATTEMPT #47", duration=1, priority=Priority.VERY_HIGH, frequency="hourly")
+    # gremlin.add_task(title="steal dad's socks", duration=9999, priority=Priority.LOW, frequency="constantly")
+    # gremlin.add_task(title="Nap (do not disturb or else)", duration=0, priority=Priority.VERY_LOW, frequency="never")
+    # gremlin.add_task(title="??????????", duration=30, priority=Priority.MEDIUM, frequency="??????")
 
     print("Today's Schedule")
     print('~'*30)
+    for task in claude.get_all_tasks():
+        print(task)
+    '''
+    (schedule, reasoning) = s.generate_schedule(claude)
+    for item in schedule:
+        print(item)
+    '''
 
 if __name__ == "__main__":
     main()
