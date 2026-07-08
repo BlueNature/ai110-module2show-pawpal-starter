@@ -46,12 +46,25 @@ pip install -r requirements.txt
 
 Paste a sample of your app's CLI or Streamlit output here so a reader can see what a generated plan looks like:
 
+**Example CLI output:** (Streamlit output is formatted cleanly as a table)
 ```
-# e.g.:
-# Daily plan for Biscuit (Golden Retriever):
-#   08:00 — Morning walk (30 min) [priority: high]
-#   09:00 — Feeding (10 min) [priority: high]
-#   ...
+Tomorrow's Generated Schedule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Task(title='Vet visit', date=datetime.date(2026, 7, 7), time=datetime.time(10, 30), duration=200, priority=<Priority.VERY_HIGH: 5>, frequency=<Frequency.ONE_TIME: 'one-time'>, completed=False)
+Task(title='walkies!', date=datetime.date(2026, 7, 7), time=datetime.time(8, 0), duration=60, priority=<Priority.HIGH: 4>, frequency=<Frequency.DAILY: 'daily'>, completed=False)
+Task(title='brushing', date=datetime.date(2026, 7, 7), time=datetime.time(14, 0), duration=15, priority=<Priority.MEDIUM: 3>, frequency=<Frequency.WEEKLY: 'weekly'>, completed=False)
+Task(title='??????????', date=datetime.date(2026, 7, 7), time=datetime.time(20, 0), duration=30, priority=<Priority.MEDIUM: 3>, frequency=<Frequency.ONE_TIME: 'one-time'>, completed=False)
+Task(title="steal dad's socks", date=datetime.date(2026, 7, 7), time=datetime.time(8, 0), duration=9999, priority=<Priority.LOW: 2>, frequency=<Frequency.DAILY: 'daily'>, completed=False)
+
+Scheduling Reasoning
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Added 'Vet visit' for Spot at 10:30:00.
+Added 'walkies!' for Dot at 08:00:00.
+Skipped 'Bath Time' for Spot — time conflict with 'Vet visit'.
+Added 'brushing' for Pip at 14:00:00.
+Added '??????????' for Lord Biscuit Mc-Stinkypaws III at 20:00:00.
+Added 'steal dad's socks' for Lord Biscuit Mc-Stinkypaws III at 08:00:00.
+Skipped 'Nap (do not disturb or else)' for Lord Biscuit Mc-Stinkypaws III — time conflict with 'Vet visit'.
 ```
 
 ## 🧪 Testing PawPal+
@@ -76,10 +89,11 @@ Sample test output:
 
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Task sorting | Scheduler.sort_by_date, Scheduler.sort_by_time, Scheduler.sort_by_priority | Sorting criteria can include date, time (separate), and priority |
+| Task sorting with tiebreakers | Scheduler.sort_by_time_with_priority, Scheduler.sort_by_priority_with_time | More complex sorting: uses one criterion with another to settle tiebreakers |
+| Filtering | Scheduler.filter_by_completed, Scheduler.filter_by_date, Scheduler.filter_by_pet | Filtering criteria can include completion status, specific date, and pet |
+| Conflict handling | Scheduler.generate_schedule | Checks for overlapping time slots when adding a new task and may skip it accordingly |
+| Recurring tasks | Task.mark_complete | If frequency is daily or weekly, automatically populates a new Task with identical attributes and appropriate time |
 
 ## 📸 Demo Walkthrough
 

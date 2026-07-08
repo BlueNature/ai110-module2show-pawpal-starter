@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from datetime import date as Date, time as Time, timedelta
+from datetime import date as Date, datetime, time as Time, timedelta
 from enum import Enum
 from typing import Optional
 
@@ -114,6 +114,11 @@ class Scheduler:
     def sort_by_time_with_priority(tasks: list[Task]) -> list[Task]:
         """Return tasks sorted ascending by time; higher priority breaks ties."""
         return sorted(tasks, key=lambda t: (t.time or Time.max, -t.priority.value))
+    
+    @staticmethod
+    def sort_by_priority_with_time(tasks: list[Task]) -> list[Task]:
+        """Return tasks sorted descending by priority (VERY_HIGH first); earlier time breaks ties."""
+        return sorted(tasks, key=lambda t: (-t.priority.value, t.time or Time.max))
 
     @staticmethod
     def filter_by_completed(tasks: list[Task], completed: bool = True) -> list[Task]:
@@ -130,9 +135,67 @@ class Scheduler:
         """Return only tasks belonging to the pet with the given name."""
         return [t for t in tasks if t.pet is not None and t.pet.name == pet_name]
 
-    def generate_schedule(self, owner: Owner) -> tuple:
+    def generate_schedule(self, owner: Owner, date: Optional[Date] = None) -> tuple[list[Task], list[str]]:
         """Generate a prioritized daily schedule for all of the owner's pets."""
-        pass
+        if date is None:
+            date = Date.today() + timedelta(days=1)
+
+        schedule: list[Task] = []
+        reasoning: list[str] = []
+
+        tasks = owner.get_all_tasks()
+        revised_tasks = Scheduler.sort_by_priority_with_time(
+            Scheduler.filter_by_date(
+                Scheduler.filter_by_completed(tasks, False),
+                date
+            )
+        )
+
+        for task in revised_tasks:
+            pet_name = task.pet.name if task.pet else "unknown pet"
+
+            if task.time is None:
+                schedule.append(task)
+                reasoning.append(f"Added '{task.title}' for {pet_name} (no specific time set).")
+                continue
+
+            task_start = task.time
+            task_end = (datetime.combine(Date.min, task.time) + timedelta(minutes=task.duration)).time()
+
+            conflict = False
+            for scheduled_task in schedule:
+                if scheduled_task.time is None:
+                    continue
+                s_start = scheduled_task.time
+                s_end = (datetime.combine(Date.min, scheduled_task.time) + timedelta(minutes=scheduled_task.duration)).time()
+
+                # Original logic checked three cases: (1) task_start strictly inside [s_start, s_end),
+                # (2) task_end strictly inside (s_start, s_end), (3) new task strictly straddles the
+                # scheduled task. The problem is case (3): it requires task_start < s_start, so it silently
+                # misses the case where task_start == s_start but task_end >= s_end. For example, a new
+                # 3-hour task starting at 8:00 would not be flagged against a scheduled 1-hour task also
+                # starting at 8:00 — none of the three conditions fire.
+                #
+                # Simply widening the inequalities to >= and <= doesn't work either: it would flag adjacent
+                # tasks (e.g. [8:00-9:00] then [9:00-10:00]) as conflicting because task_start (9:00) <=
+                # s_end (9:00) satisfies condition 1, even though the tasks don't actually overlap.
+                #
+                # The clean fix is the standard two-interval overlap test: intervals [a, b) and [c, d)
+                # overlap if and only if a < d AND c < b. Any other arrangement means one ends before the
+                # other starts. This handles all edge cases (same start, same end, one containing the other,
+                # partial overlap) and correctly passes adjacent tasks where one ends exactly when the other begins.
+                if task_start < s_end and s_start < task_end:
+                    reasoning.append(
+                        f"Skipped '{task.title}' for {pet_name} — time conflict with '{scheduled_task.title}'."
+                    )
+                    conflict = True
+                    break
+
+            if not conflict:
+                schedule.append(task)
+                reasoning.append(f"Added '{task.title}' for {pet_name} at {task.time}.")
+
+        return (schedule, reasoning)
 
 
 @dataclass
@@ -157,6 +220,13 @@ class Owner:
         for pet in self.pets:
             if pet.name == name:
                 return pet
+        return None
+    
+    def find_task(self, title: str) -> Optional[Task]:
+        """Return the first task (out of all the owner's pets' tasks) matching the given title, or None if not found."""
+        for task in self.get_all_tasks():
+            if task.title == title:
+                return task
         return None
 
     def get_all_tasks(self) -> list[Task]:
